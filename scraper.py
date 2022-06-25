@@ -8,7 +8,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import dotenv
 
 BUCKET_NAME = "output-dec1"
-MY_FOLDER_PREFIX = "Bitcoin-Tweets"
+MY_FOLDER_PREFIX = "Bitcoin-Tweets/"
 DATA_PATH = '/opt/airflow/data/'
 dotenv.load_dotenv("dev.env")
 
