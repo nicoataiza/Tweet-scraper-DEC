@@ -47,4 +47,10 @@ df = scrape_tweets("bitcoin")
 df['scores'] = df['Text'].apply(lambda tweets: sid.polarity_scores(tweets))
 df['compound']  = df['scores'].apply(lambda score_dict: score_dict['compound'])
 
-upload_string_to_gcs
+# Validate
+pass 
+
+# Save as csv and then upload  
+csv_buffer = StringIO()
+df.to_csv(csv_buffer)
+upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename="bitcoin_tweets")
