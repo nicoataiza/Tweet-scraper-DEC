@@ -56,5 +56,5 @@ csv_buffer = StringIO()
 
 df.to_csv(csv_buffer)
 print("csv_ready")
-upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename="bitcoin_tweets")
+upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename="bitcoin_tweets.csv")
 print("done uploading")
