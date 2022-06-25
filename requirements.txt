@@ -1,0 +1,8 @@
+selenium
+pandas
+python-dotenv
+boto3
+google-cloud-bigquery
+google-cloud-storage
+nltk
+snscrape
