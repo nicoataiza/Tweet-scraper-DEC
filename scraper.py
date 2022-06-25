@@ -8,7 +8,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import dotenv
 
 BUCKET_NAME = "output-dec1"
-MY_FOLDER_PREFIX = "chirstian_ataiza/"
+MY_FOLDER_PREFIX = "Bitcoin-Tweets"
 DATA_PATH = '/opt/airflow/data/'
 dotenv.load_dotenv("dev.env")
 
@@ -42,15 +42,19 @@ def upload_string_to_gcs(csv_body, uploaded_filename, service_secret=os.environ.
     gcs_resource.Object(BUCKET_NAME, MY_FOLDER_PREFIX + "/" + uploaded_filename).put(Body=csv_body.getvalue())
 
 # VADER - Sentiment analysis
+print("VADER - Sentiment analysis")
 sid = SentimentIntensityAnalyzer()
 df = scrape_tweets("bitcoin")
 df['scores'] = df['Text'].apply(lambda tweets: sid.polarity_scores(tweets))
 df['compound']  = df['scores'].apply(lambda score_dict: score_dict['compound'])
-
+print("df_ready")
 # Validate
 pass 
 
 # Save as csv and then upload  
 csv_buffer = StringIO()
+
 df.to_csv(csv_buffer)
+print("csv_ready")
 upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename="bitcoin_tweets")
+print("done uploading")
