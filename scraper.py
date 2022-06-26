@@ -47,7 +47,7 @@ while start_date <= end_date:
     # VADER - Sentiment analysis
     print("VADER - Sentiment analysis")
     sid = SentimentIntensityAnalyzer()
-    df = scrape_tweets("bitcoin",start_date=start_date,end_date=start_date)
+    df = scrape_tweets("bitcoin",start_date=start_date,end_date=(start_date+timedelta(days=1)))
     df['scores'] = df['Text'].apply(lambda tweets: sid.polarity_scores(tweets))
     df['compound']  = df['scores'].apply(lambda score_dict: score_dict['compound'])
     print("df_ready")
@@ -60,5 +60,5 @@ while start_date <= end_date:
     df.to_csv(csv_buffer)
     print("csv_ready")
     upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename=f"bitcoin_tweets_{start_date.strftime('%Y-%m-%d')}.csv")
-    print(f"done uploading bitcoin_tweets.csv_{start_date}")
+    print(f"done uploading bitcoin_tweets_{start_date.strftime('%Y-%m-%d')}.csv")
     start_date += timedelta(days=1)
