@@ -53,7 +53,7 @@ while start_date <= end_date:
     print("df_ready")
     # Validate
     pass 
-
+    
     # Save as csv and then upload  
     csv_buffer = StringIO()
 
