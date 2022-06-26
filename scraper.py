@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
 import os
@@ -12,7 +12,7 @@ MY_FOLDER_PREFIX = "Bitcoin-Tweets/"
 DATA_PATH = '/opt/airflow/data/'
 dotenv.load_dotenv("dev.env")
 
-def scrape_tweets(keyword):
+def scrape_tweets(keyword,start_date=datetime(2017,12,30),end_date=datetime(2018,12,30)):
     """
     Scrapes twitter based on specified keyword
 
@@ -23,8 +23,8 @@ def scrape_tweets(keyword):
         DataFrame: returns a DataFrame with the following columns regarding the tweet -
                    Datetime, Tweet Id, Text, and Username
     """
-    start_date = datetime(2017,12,30)
-    end_date = datetime(2018,12,30) #datetime.today()
+    # start_date = 
+    # end_date =  #datetime.today()
     tweets_list = []
     for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'{keyword} since:{start_date.strftime("%Y-%m-%d")} until:{end_date.strftime("%Y-%m-%d")}').get_items()):
         tweets_list.append([tweet.date, tweet.id, tweet.content, tweet.user.username])
@@ -41,20 +41,24 @@ def upload_string_to_gcs(csv_body, uploaded_filename, service_secret=os.environ.
     )
     gcs_resource.Object(BUCKET_NAME, MY_FOLDER_PREFIX + "/" + uploaded_filename).put(Body=csv_body.getvalue())
 
-# VADER - Sentiment analysis
-print("VADER - Sentiment analysis")
-sid = SentimentIntensityAnalyzer()
-df = scrape_tweets("bitcoin")
-df['scores'] = df['Text'].apply(lambda tweets: sid.polarity_scores(tweets))
-df['compound']  = df['scores'].apply(lambda score_dict: score_dict['compound'])
-print("df_ready")
-# Validate
-pass 
+start_date = datetime(2017,12,30)
+end_date = datetime(2018,1,2)
+while start_date <= end_date:
+    # VADER - Sentiment analysis
+    print("VADER - Sentiment analysis")
+    sid = SentimentIntensityAnalyzer()
+    df = scrape_tweets("bitcoin",start_date=start_date,end_date=start_date)
+    df['scores'] = df['Text'].apply(lambda tweets: sid.polarity_scores(tweets))
+    df['compound']  = df['scores'].apply(lambda score_dict: score_dict['compound'])
+    print("df_ready")
+    # Validate
+    pass 
 
-# Save as csv and then upload  
-csv_buffer = StringIO()
+    # Save as csv and then upload  
+    csv_buffer = StringIO()
 
-df.to_csv(csv_buffer)
-print("csv_ready")
-upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename="bitcoin_tweets.csv")
-print("done uploading")
+    df.to_csv(csv_buffer)
+    print("csv_ready")
+    upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename=f"bitcoin_tweets.csv_{start_date}")
+    print(f"done uploading bitcoin_tweets.csv_{start_date}")
+    start_date += timedelta(days=1)
