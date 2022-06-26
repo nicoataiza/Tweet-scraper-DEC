@@ -59,6 +59,6 @@ while start_date <= end_date:
 
     df.to_csv(csv_buffer)
     print("csv_ready")
-    upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename=f"bitcoin_tweets.csv_{start_date}")
+    upload_string_to_gcs(csv_body=csv_buffer, uploaded_filename=f"bitcoin_tweets_{start_date.strftime("%Y-%m-%d")}.csv")
     print(f"done uploading bitcoin_tweets.csv_{start_date}")
     start_date += timedelta(days=1)
