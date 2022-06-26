@@ -42,7 +42,7 @@ def upload_string_to_gcs(csv_body, uploaded_filename, service_secret=os.environ.
     gcs_resource.Object(BUCKET_NAME, MY_FOLDER_PREFIX + "/" + uploaded_filename).put(Body=csv_body.getvalue())
 
 start_date = datetime(2017,12,30)
-end_date = datetime(2018,1,2)
+end_date = datetime.today()
 while start_date <= end_date:
     # VADER - Sentiment analysis
     print("VADER - Sentiment analysis")
