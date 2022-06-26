@@ -11,7 +11,7 @@ import os
 BUCKET_NAME = "output-dec1"
 MY_FOLDER_PREFIX = "Bitcoin-Tweets/"
 DATA_PATH = '/opt/airflow/data/'
-dotenv.load_dotenv(os.getcwd() + "//" + "dev.env")
+dotenv.load_dotenv("dev.env")
 
 def scrape_tweets(keyword,start_date=datetime(2017,12,30),end_date=datetime(2018,12,30)):
     """
